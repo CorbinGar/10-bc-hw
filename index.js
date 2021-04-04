@@ -8,12 +8,9 @@ const engineer = require('./lib/engineer');
 const manager = require('./lib/manager');
 const intern = require('./lib/intern');
 
-// The array of Employees
-var employees = []
-var positions = ["Team Manager","Engineer","Intern"]
 
 // The prompt for creating one employee
-const personPrompt = () =>
+const employeePrompt = () =>
   inquirer.prompt([
 
     {
@@ -33,10 +30,9 @@ const personPrompt = () =>
       message: 'What is the Employees email?',
     },
     {
-      type: 'list',
-      message: 'What is your office number',
+      type: 'input',
       name: 'officenum',
-      choices:  ['Github Username', 'School', 'Office #'],
+      message: 'What is your office number',
     },
     {
       type: 'input',
@@ -47,7 +43,7 @@ const personPrompt = () =>
 
 
 const generateperson = (answers) => 
-  employees[employees.length] = new Employee( answers.name , answers.position, employees.length, answers.email, answers.other1 , answers.other2);
+  employees[employees.length] = new Employee( answers.name , answers.position, employees.length, answers.email, answers.officenum , answers.username);
 ;
 
 
@@ -70,7 +66,7 @@ function mainLoop(){
   MainPrompt().then((answers) => {
     if(answers.path === "Add Employee"){
 
-      personPrompt().then((answers2) => {
+      employeePrompt().then((answers2) => {
 
         generateperson(answers2);
 
