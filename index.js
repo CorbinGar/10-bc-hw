@@ -51,23 +51,19 @@ const generateperson = (answers) =>
 ;
 
 
-const MainPrompt = () =>
-  inquirer.prompt([
-    {
-      type: 'list',
-      message: 'What would you like to do',
-      name: 'path',
-      choices:  ['Add Employee', 'Exit and Generate'],
-    }
+
+
+MainPrompt = async () => {
+  const menu = await inquirer.prompt([
+      {
+          type: 'list',
+          name: 'action',
+          message: "What would you like to do?",
+          choices: ['add an engineer', 'add an intern', 'finish'],
+      }
   ]);
-;
-
-
-
-function generateHtml(){
-
-};
-
+  return menu.action;
+}
 
 
 function mainLoop(){
