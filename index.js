@@ -9,37 +9,91 @@ const manager = require('./lib/manager');
 const intern = require('./lib/intern');
 
 
-// The prompt for creating one employee
-const employeePrompt = () =>
-  inquirer.prompt([
+managerquestions = async () => {
+  const managerdata = await inquirer.prompt([
+      {
+          type: 'input',
+          name: 'name',
+          message: 'What is the managers name?'
+      },
+      {
+          type: 'input',
+          name: 'id',
+          message: 'What is the managers employee ID number?'
+      },
+      {
+          type: 'input',
+          name: 'email',
+          message: 'What is the managers email address?'
+      },
+      {
+          type: 'input',
+          name: 'officeNumber',
+          message: 'What is the managers office number?'
+      }
+  ]);
+  return new manager(managerdata.name, managerdata.id, managerdata.email, managerdata.officeNumber);
+}
 
-    {
-      type: 'input',
-      name: 'name',
-      message: 'What is the Employees Name?',
-    },
-    {
-      type: 'list',
-      message: 'What is the employees position',
-      name: 'position',
-      choices:  positions,
-    },
-    {
-      type: 'input',
-      name: 'email',
-      message: 'What is the Employees email?',
-    },
-    {
-      type: 'input',
-      name: 'officenum',
-      message: 'What is your office number',
-    },
-    {
-      type: 'input',
-      name: 'username',
-      message: 'What is your github username',
-    }
-]);
+internquestions = async () => {
+  const interndata = await inquirer.prompt([
+      {
+          type: 'input',
+          name: 'name',
+          message: 'What is the interns name'
+      },
+      {
+          type: 'input',
+          name: 'id',
+          message: 'What is the interns number?'
+      },
+      {
+          type: 'input',
+          name: 'email',
+          message: 'What is the interns email address?'
+      },
+      {
+          type: 'input',
+          name: 'school',
+          message: 'What school did the intern go to?'
+      }
+  ]);
+  return new intern(interndata.name, interndata.id, interndata.email, interndata.school);
+}
+
+
+
+
+
+
+
+engineerquestions = async () => {
+  const engineerdata = await inquirer.prompt([
+      {
+          type: 'input',
+          name: 'name',
+          message: 'What is the engineers name'
+      },
+      {
+          type: 'input',
+          name: 'id',
+          message: 'What is the engineers ID number?'
+      },
+      {
+          type: 'input',
+          name: 'email',
+          message: 'What is the engineers email address?'
+      },
+      {
+          type: 'input',
+          name: 'github',
+          message: 'What is the engineers username on github?'
+      }
+  ]);
+  return new engineer(engineerdata.name, engineerdata.id, engineerdata.email, engineerdata.github);
+}
+
+
 
 
 const generateperson = (answers) => 
@@ -55,7 +109,7 @@ MainPrompt = async () => {
           type: 'list',
           name: 'action',
           message: "What would you like to do?",
-          choices: ['add an engineer', 'add an intern', 'finish'],
+          choices: ['add a manager', 'add a engineer', 'add a intern', 'finish'],
       }
   ]);
   return menu.action;
