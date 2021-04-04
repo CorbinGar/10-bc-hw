@@ -1,8 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-
-
 const generateHtml = require('./util/generateHtml');
 const engineer = require('./lib/engineer');
 const manager = require('./lib/manager');
@@ -61,12 +59,6 @@ internquestions = async () => {
   return new intern(interndata.name, interndata.id, interndata.email, interndata.school);
 }
 
-
-
-
-
-
-
 engineerquestions = async () => {
   const engineerdata = await inquirer.prompt([
       {
@@ -94,13 +86,11 @@ engineerquestions = async () => {
 }
 
 
-
-
-const generateperson = (answers) => 
-  employees[employees.length] = new Employee( answers.name , answers.position, employees.length, answers.email, answers.officenum , answers.username);
-;
-
-
+writeToFile = async (fileName, data) => {
+  const writeFileAsync = util.promisify(fs.writeFile);
+  //use path.join to save html to dist directory
+  await writeFileAsync(path.join(process.cwd(), '/dist/' + fileName), data);
+}
 
 
 MainPrompt = async () => {
@@ -115,28 +105,36 @@ MainPrompt = async () => {
   return menu.action;
 }
 
+function choiceSplit(){
 
-function mainLoop(){
-  MainPrompt().then((answers) => {
-    if(answers.path === "Add Employee"){
+  var employeearray = [];
 
-      employeePrompt().then((answers2) => {
+  while (true) {
+    let menuchoice = await MainPrompt();
 
-        generateperson(answers2);
-
-      });
-
-      mainLoop();
-
-    }else{
-      generateHtml();
+    if (menuchoice === 'add a engineer') {
+        const engineer = await engineerQuestions();
+        employeearray.push(engineer);
     }
-  });
+    else if (menuchoice === 'add a intern') {
+        const intern = await internQuestions();
+        employeearray.push(intern);
+    }
+    else if (menuchoice === 'add a manager') {
+      const intern = await managerQuestions();
+      employeearray.push(intern);
+  }
+    else {
+        break;
+    }
+  }
 }
+
 
 
 const init = () => {
   mainLoop();
+  choiceSplit();
 };
 
 init();
