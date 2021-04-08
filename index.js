@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const util = require('util');
 
 const generateHtml = require('./util/generateHtml');
 const engineer = require('./lib/engineer');
@@ -86,10 +87,10 @@ engineerquestions = async () => {
 }
 
 
-writeToFile = async (fileName, data) => {
-  const writeFileAsync = util.promisify(fs.writeFile);
-  //use path.join to save html to dist directory
-  await writeFileAsync(path.join(process.cwd(), '/dist/' + fileName), data);
+writetoFile = async (data) => {
+    const writeFileAsync = util.promisify(fs.writeFile);
+    //use path.join to save html to dist directory
+    await writeFileAsync("test/team.html", data);
 }
 
 
@@ -99,42 +100,50 @@ MainPrompt = async () => {
           type: 'list',
           name: 'action',
           message: "What would you like to do?",
-          choices: ['add a manager', 'add a engineer', 'add a intern', 'finish'],
+          choices: ['add a engineer', 'add a intern', 'finish'],
       }
   ]);
   return menu.action;
 }
 
-function choiceSplit(){
 
-  var employeearray = [];
 
-  while (true) {
-    let menuchoice = await MainPrompt();
 
-    if (menuchoice === 'add a engineer') {
-        const engineer = await engineerQuestions();
-        employeearray.push(engineer);
+
+init = async () => {
+
+    var Manager = await managerquestions();
+       
+    var employeearray = [];
+
+    while (true) {
+      var menuchoice = await MainPrompt();
+  
+      if (menuchoice === 'add a engineer') {
+          const engineer = await engineerquestions();
+          employeearray.push(engineer);
+      }
+      else if (menuchoice === 'add a intern') {
+          const intern = await internquestions();
+          employeearray.push(intern);
+      }
+      else {
+    
+      const markdown = generateHtml(employeearray, Manager);
+
+      try {
+          await writetoFile(markdown);
+      }
+      catch (err) {
+          console.error("There was an error writing the HTML file. Please try again.");
+          throw err;
+      }
+      break
     }
-    else if (menuchoice === 'add a intern') {
-        const intern = await internQuestions();
-        employeearray.push(intern);
-    }
-    else if (menuchoice === 'add a manager') {
-      const intern = await managerQuestions();
-      employeearray.push(intern);
-  }
-    else {
-        break;
-    }
-  }
-}
+  };
 
 
 
-const init = () => {
-  mainLoop();
-  choiceSplit();
 };
 
 init();
